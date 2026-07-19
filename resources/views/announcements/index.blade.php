@@ -20,7 +20,8 @@
                 <a href="{{ route('announcements.show', $announcement) }}"
                    class="group flex bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
                     @if ($announcement->image)
-                        <div class="shrink-0 w-24 sm:w-36 self-stretch overflow-hidden bg-gray-100">
+                        {{-- SP: 小さめの円形サムネイル / PC: 従来どおり左側の帯 --}}
+                        <div class="shrink-0 self-center sm:self-stretch w-14 h-14 sm:w-36 sm:h-auto ms-3 my-3 sm:m-0 rounded-full sm:rounded-none overflow-hidden bg-gray-100">
                             <img src="{{ $announcement->image }}" alt="{{ $announcement->title }}" loading="lazy"
                                  class="w-full h-full object-cover">
                         </div>
