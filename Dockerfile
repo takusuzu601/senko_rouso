@@ -1,11 +1,18 @@
 # Laravel (PHP) を Render の Docker 環境で動かすための Dockerfile
 FROM php:8.4-cli
 
-# 必要なシステムパッケージと PHP 拡張(PostgreSQL/Supabase用の pdo_pgsql を含む)
+# 必要なシステムパッケージと PHP 拡張
+#  - pdo_pgsql / pgsql : Supabase(PostgreSQL)接続用
+#  - mbstring          : Laravel 必須(ベースイメージに含まれないため明示インストール)
+#  - gd                : simple-qrcode(QRコード生成)用
+#  - zip / bcmath / intl / exif : Laravel でよく使われる拡張
 RUN apt-get update && apt-get install -y \
         git curl zip unzip \
-        libpq-dev libzip-dev libonig-dev \
-    && docker-php-ext-install pdo pdo_pgsql pgsql zip \
+        libpq-dev libzip-dev libonig-dev libicu-dev \
+        libpng-dev libjpeg-dev libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j"$(nproc)" \
+        pdo pdo_pgsql pgsql mbstring gd zip bcmath intl exif \
     && rm -rf /var/lib/apt/lists/*
 
 # Node.js (Vite でのフロントエンドビルド用)
