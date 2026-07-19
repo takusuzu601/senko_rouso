@@ -18,14 +18,14 @@
         <div class="space-y-4">
             @foreach ($announcements as $announcement)
                 <a href="{{ route('announcements.show', $announcement) }}"
-                   class="group block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
+                   class="group flex bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
                     @if ($announcement->image)
-                        <div class="aspect-[16/9] w-full overflow-hidden bg-gray-100">
+                        <div class="shrink-0 w-24 sm:w-36 self-stretch overflow-hidden bg-gray-100">
                             <img src="{{ $announcement->image }}" alt="{{ $announcement->title }}" loading="lazy"
-                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]">
+                                 class="w-full h-full object-cover">
                         </div>
                     @endif
-                    <div class="p-5">
+                    <div class="min-w-0 flex-1 p-4 sm:p-5">
                         <div class="text-sm text-gray-500 mb-1">
                             {{ optional($announcement->published_at)->format('Y年n月j日') ?? $announcement->created_at->format('Y年n月j日') }}
                         </div>
