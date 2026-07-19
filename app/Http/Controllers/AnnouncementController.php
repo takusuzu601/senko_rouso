@@ -24,4 +24,18 @@ class AnnouncementController extends Controller
 
         return view('announcements.show', compact('announcement'));
     }
+
+    /**
+     * いいねを +1 する。二重押し防止はフロント(localStorage)側で行う。
+     */
+    public function like(Announcement $announcement)
+    {
+        if (! $announcement->is_published) {
+            abort(404);
+        }
+
+        $announcement->increment('likes_count');
+
+        return response()->json(['likes' => $announcement->likes_count]);
+    }
 }

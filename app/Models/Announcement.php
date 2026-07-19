@@ -23,6 +23,7 @@ class Announcement extends Model
         return [
             'is_published' => 'boolean',
             'published_at' => 'date',
+            'likes_count' => 'integer',
         ];
     }
 
