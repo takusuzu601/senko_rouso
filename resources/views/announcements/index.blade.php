@@ -18,12 +18,20 @@
         <div class="space-y-4">
             @foreach ($announcements as $announcement)
                 <a href="{{ route('announcements.show', $announcement) }}"
-                   class="block bg-white rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-md transition">
-                    <div class="text-sm text-gray-500 mb-1">
-                        {{ optional($announcement->published_at)->format('Y年n月j日') ?? $announcement->created_at->format('Y年n月j日') }}
+                   class="group block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
+                    @if ($announcement->image)
+                        <div class="aspect-[16/9] w-full overflow-hidden bg-gray-100">
+                            <img src="{{ $announcement->image }}" alt="{{ $announcement->title }}" loading="lazy"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]">
+                        </div>
+                    @endif
+                    <div class="p-5">
+                        <div class="text-sm text-gray-500 mb-1">
+                            {{ optional($announcement->published_at)->format('Y年n月j日') ?? $announcement->created_at->format('Y年n月j日') }}
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-800">{{ $announcement->title }}</h2>
+                        <p class="mt-2 text-gray-600 line-clamp-2">{{ Str::limit(strip_tags($announcement->body), 100) }}</p>
                     </div>
-                    <h2 class="text-lg font-semibold text-gray-800">{{ $announcement->title }}</h2>
-                    <p class="mt-2 text-gray-600 line-clamp-2">{{ Str::limit(strip_tags($announcement->body), 100) }}</p>
                 </a>
             @endforeach
         </div>

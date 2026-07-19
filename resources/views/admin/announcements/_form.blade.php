@@ -9,6 +9,16 @@
         isPublished: {{ Illuminate\Support\Js::from((bool) old('is_published', $announcement->is_published)) }},
         showPreview: false,
         maxLength: {{ $maxLength }},
+        imagePreview: {{ Illuminate\Support\Js::from($announcement->image) }},
+        hasCurrentImage: {{ Illuminate\Support\Js::from((bool) $announcement->image) }},
+        removeImage: false,
+        onImageChange(event) {
+            const file = event.target.files[0];
+            if (! file) return;
+            const reader = new FileReader();
+            reader.onload = e => { this.imagePreview = e.target.result; this.removeImage = false; };
+            reader.readAsDataURL(file);
+        },
     }"
     class="space-y-6"
 >
@@ -17,6 +27,37 @@
         <x-text-input id="title" name="title" type="text" class="mt-1 block w-full"
             x-model="title" required autofocus />
         <x-input-error :messages="$errors->get('title')" class="mt-2" />
+    </div>
+
+    <div>
+        <x-input-label value="メイン画像" />
+        <p class="mt-1 text-xs text-gray-500">
+            一覧・詳細ページの先頭に大きく表示されます。推奨は横長(16:9)。アップロード時に自動で圧縮・リサイズされます。
+        </p>
+
+        {{-- プレビュー(現在の画像 or 選択した画像) --}}
+        <template x-if="imagePreview && ! removeImage">
+            <div class="mt-3 aspect-[16/9] w-full overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
+                <img :src="imagePreview" alt="プレビュー" class="w-full h-full object-cover">
+            </div>
+        </template>
+
+        <input type="file" name="image" accept="image/jpeg,image/png,image/webp"
+            @change="onImageChange($event)"
+            class="mt-3 block w-full text-sm text-gray-600
+                   file:mr-4 file:rounded-md file:border-0 file:bg-indigo-50 file:px-4 file:py-2
+                   file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100" />
+
+        {{-- 編集時: 現在の画像を削除するオプション --}}
+        <template x-if="hasCurrentImage">
+            <label class="mt-2 inline-flex items-center text-sm text-gray-600">
+                <input type="checkbox" name="remove_image" value="1" x-model="removeImage"
+                    class="rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500">
+                <span class="ms-2">現在の画像を削除する</span>
+            </label>
+        </template>
+
+        <x-input-error :messages="$errors->get('image')" class="mt-2" />
     </div>
 
     <div>
