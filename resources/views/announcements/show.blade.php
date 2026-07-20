@@ -60,7 +60,7 @@
 
                 @if ($announcement->audio)
                     <button type="button"
-                        @click="$store.audioPlayer.show({{ Illuminate\Support\Js::from($announcement->audio) }}, {{ Illuminate\Support\Js::from($announcement->title) }})"
+                        @click="$store.audioPlayer.show({{ Illuminate\Support\Js::from(route('announcements.audio', $announcement)) }}, {{ Illuminate\Support\Js::from($announcement->title) }})"
                         class="inline-flex items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:border-[#8CC63F] hover:text-[#4f8a1f] transition">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M8 5v14l11-7z"/>

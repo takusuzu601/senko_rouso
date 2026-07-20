@@ -51,9 +51,9 @@
                                     <span class="tabular-nums">{{ $topic->likes_count }}</span>
                                 </span>
 
-                                @if ($topic->audio)
+                                @if ($topic->has_audio)
                                     <button type="button"
-                                        @click.prevent.stop="$store.audioPlayer.show({{ Illuminate\Support\Js::from($topic->audio) }}, {{ Illuminate\Support\Js::from($topic->title) }})"
+                                        @click.prevent.stop="$store.audioPlayer.show({{ Illuminate\Support\Js::from(route('topics.audio', $topic)) }}, {{ Illuminate\Support\Js::from($topic->title) }})"
                                         aria-label="音声を再生"
                                         class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#8CC63F] text-white hover:opacity-90 transition">
                                         <svg class="w-3.5 h-3.5 ms-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -102,9 +102,9 @@
                                 <span class="tabular-nums">{{ $announcement->likes_count }}</span>
                             </span>
 
-                            @if ($announcement->audio)
+                            @if ($announcement->has_audio)
                                 <button type="button"
-                                    @click.prevent.stop="$store.audioPlayer.show({{ Illuminate\Support\Js::from($announcement->audio) }}, {{ Illuminate\Support\Js::from($announcement->title) }})"
+                                    @click.prevent.stop="$store.audioPlayer.show({{ Illuminate\Support\Js::from(route('announcements.audio', $announcement)) }}, {{ Illuminate\Support\Js::from($announcement->title) }})"
                                     aria-label="音声を再生"
                                     class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#8CC63F] text-white hover:opacity-90 transition">
                                     <svg class="w-3.5 h-3.5 ms-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -15,6 +15,16 @@ RUN apt-get update && apt-get install -y \
         pdo pdo_pgsql pgsql mbstring gd zip bcmath intl exif \
     && rm -rf /var/lib/apt/lists/*
 
+# ベースイメージには php.ini が同梱されていないため、アップロード上限等を明示設定
+# (音声ファイル投稿機能: アプリ側のバリデーション上限 20MB に対し、
+#  PHP デフォルトの upload_max_filesize/post_max_size が小さすぎてアップロード自体が失敗していた)
+RUN { \
+        echo 'upload_max_filesize = 25M'; \
+        echo 'post_max_size = 30M'; \
+        echo 'memory_limit = 256M'; \
+        echo 'max_execution_time = 120'; \
+    } > /usr/local/etc/php/conf.d/uploads.ini
+
 # Node.js (Vite でのフロントエンドビルド用)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \

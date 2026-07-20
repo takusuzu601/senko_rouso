@@ -25,6 +25,7 @@ class Announcement extends Model
             'is_published' => 'boolean',
             'published_at' => 'date',
             'likes_count' => 'integer',
+            'has_audio' => 'boolean',
         ];
     }
 
