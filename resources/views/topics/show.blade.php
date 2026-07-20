@@ -1,33 +1,33 @@
-<x-layouts.public :title="$announcement->title">
-    <a href="{{ route('announcements.index') }}" class="text-sm text-gray-500 hover:text-gray-700">&larr; お知らせ一覧に戻る</a>
+<x-layouts.public :title="$topic->title">
+    <a href="{{ route('topics.index') }}" class="text-sm text-gray-500 hover:text-gray-700">&larr; トピック一覧に戻る</a>
 
     <article class="mt-4 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        @if ($announcement->image)
+        @if ($topic->image)
             <div class="aspect-[16/9] w-full overflow-hidden bg-gray-100">
-                <img src="{{ $announcement->image }}" alt="{{ $announcement->title }}"
+                <img src="{{ $topic->image }}" alt="{{ $topic->title }}"
                      class="w-full h-full object-cover">
             </div>
         @endif
         <div class="p-6 sm:p-8">
         <div class="text-sm text-gray-500 mb-2">
-            {{ optional($announcement->published_at)->format('Y年n月j日') ?? $announcement->created_at->format('Y年n月j日') }}
+            {{ optional($topic->published_at)->format('Y年n月j日') ?? $topic->created_at->format('Y年n月j日') }}
         </div>
-        <h1 class="text-2xl font-bold text-gray-800">{{ $announcement->title }}</h1>
-        <div class="mt-6 text-gray-700 leading-relaxed whitespace-pre-wrap">{{ $announcement->body }}</div>
+        <h1 class="text-2xl font-bold text-gray-800">{{ $topic->title }}</h1>
+        <div class="mt-6 text-gray-700 leading-relaxed whitespace-pre-wrap">{{ $topic->body }}</div>
 
-        {{-- いいね & シェア --}}
+        {{-- いいね & シェア & 再生 --}}
         <div class="mt-8 pt-6 border-t border-gray-100"
              x-data="{
-                likes: {{ (int) $announcement->likes_count }},
+                likes: {{ (int) $topic->likes_count }},
                 liked: false,
                 loading: false,
-                key: 'liked_announcement_{{ $announcement->id }}',
+                key: 'liked_topic_{{ $topic->id }}',
                 init() { this.liked = localStorage.getItem(this.key) === '1'; },
                 async toggle() {
                     if (this.liked || this.loading) return;
                     this.loading = true;
                     try {
-                        const res = await fetch('{{ route('announcements.like', $announcement) }}', {
+                        const res = await fetch('{{ route('topics.like', $topic) }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
@@ -58,9 +58,9 @@
                     <span class="tabular-nums" x-text="likes"></span>
                 </button>
 
-                @if ($announcement->audio)
+                @if ($topic->audio)
                     <button type="button"
-                        @click="$store.audioPlayer.show({{ Illuminate\Support\Js::from($announcement->audio) }}, {{ Illuminate\Support\Js::from($announcement->title) }})"
+                        @click="$store.audioPlayer.show({{ Illuminate\Support\Js::from($topic->audio) }}, {{ Illuminate\Support\Js::from($topic->title) }})"
                         class="inline-flex items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:border-[#8CC63F] hover:text-[#4f8a1f] transition">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M8 5v14l11-7z"/>

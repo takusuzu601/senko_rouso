@@ -5,3 +5,13 @@
 [x-cloak] {
     display: none !important;
 }
+
+@keyframes audio-eq-bar {
+    0%, 100% { transform: scaleY(0.35); }
+    50% { transform: scaleY(1); }
+}
+
+.audio-eq-bar {
+    animation: audio-eq-bar 1s ease-in-out infinite;
+    transform-origin: bottom;
+}

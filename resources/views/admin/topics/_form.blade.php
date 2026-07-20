@@ -4,13 +4,13 @@
 
 <div
     x-data="{
-        title: {{ Illuminate\Support\Js::from(old('title', $announcement->title)) }},
-        body: {{ Illuminate\Support\Js::from(old('body', $announcement->body)) }},
-        isPublished: {{ Illuminate\Support\Js::from((bool) old('is_published', $announcement->is_published)) }},
+        title: {{ Illuminate\Support\Js::from(old('title', $topic->title)) }},
+        body: {{ Illuminate\Support\Js::from(old('body', $topic->body)) }},
+        isPublished: {{ Illuminate\Support\Js::from((bool) old('is_published', $topic->is_published)) }},
         showPreview: false,
         maxLength: {{ $maxLength }},
-        imagePreview: {{ Illuminate\Support\Js::from($announcement->image) }},
-        hasCurrentImage: {{ Illuminate\Support\Js::from((bool) $announcement->image) }},
+        imagePreview: {{ Illuminate\Support\Js::from($topic->image) }},
+        hasCurrentImage: {{ Illuminate\Support\Js::from((bool) $topic->image) }},
         removeImage: false,
         onImageChange(event) {
             const file = event.target.files[0];
@@ -19,8 +19,8 @@
             reader.onload = e => { this.imagePreview = e.target.result; this.removeImage = false; };
             reader.readAsDataURL(file);
         },
-        audioPreview: {{ Illuminate\Support\Js::from($announcement->audio) }},
-        hasCurrentAudio: {{ Illuminate\Support\Js::from((bool) $announcement->audio) }},
+        audioPreview: {{ Illuminate\Support\Js::from($topic->audio) }},
+        hasCurrentAudio: {{ Illuminate\Support\Js::from((bool) $topic->audio) }},
         removeAudio: false,
         onAudioChange(event) {
             const file = event.target.files[0];
@@ -131,7 +131,7 @@
     <div>
         <x-input-label for="published_at" value="公開日" />
         <x-text-input id="published_at" name="published_at" type="date" class="mt-1 block w-full"
-            :value="old('published_at', optional($announcement->published_at)->format('Y-m-d'))" />
+            :value="old('published_at', optional($topic->published_at)->format('Y-m-d'))" />
         <x-input-error :messages="$errors->get('published_at')" class="mt-2" />
     </div>
 

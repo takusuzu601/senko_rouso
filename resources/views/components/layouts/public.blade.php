@@ -103,7 +103,7 @@
             </div>
         </header>
 
-        <main class="flex-1">
+        <main class="flex-1" x-data>
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
                 {{ $slot }}
             </div>
@@ -114,5 +114,40 @@
                 &copy; {{ date('Y') }} {{ config('app.name', 'お知らせ') }}
             </div>
         </footer>
+
+        {{-- 音声プレイヤー モーダル(お知らせ・トピック共通) --}}
+        <div x-data
+             x-show="$store.audioPlayer.open"
+             x-cloak
+             @keydown.escape.window="$store.audioPlayer.close()"
+             class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+            <div x-show="$store.audioPlayer.open"
+                 x-transition
+                 @click.outside="$store.audioPlayer.close()"
+                 class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
+                <div class="flex items-center justify-between gap-4 mb-4">
+                    <h3 class="font-semibold text-gray-800 truncate" x-text="$store.audioPlayer.title"></h3>
+                    <button type="button" @click="$store.audioPlayer.close()" aria-label="閉じる"
+                            class="shrink-0 text-gray-400 hover:text-gray-600 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                {{-- 再生中のイコライザー風演出 --}}
+                <div class="flex items-end justify-center gap-1.5 h-14 mb-5">
+                    <span class="audio-eq-bar w-2 h-4 rounded-full bg-[#8CC63F]" style="animation-delay: 0ms"></span>
+                    <span class="audio-eq-bar w-2 h-8 rounded-full bg-[#8CC63F]" style="animation-delay: 120ms"></span>
+                    <span class="audio-eq-bar w-2 h-14 rounded-full bg-[#8CC63F]" style="animation-delay: 240ms"></span>
+                    <span class="audio-eq-bar w-2 h-6 rounded-full bg-[#8CC63F]" style="animation-delay: 360ms"></span>
+                    <span class="audio-eq-bar w-2 h-10 rounded-full bg-[#8CC63F]" style="animation-delay: 480ms"></span>
+                </div>
+
+                <template x-if="$store.audioPlayer.src">
+                    <audio :src="$store.audioPlayer.src" controls autoplay class="w-full"></audio>
+                </template>
+            </div>
+        </div>
     </body>
 </html>

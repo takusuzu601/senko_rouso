@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Announcement;
+use App\Models\Topic;
 
 class AnnouncementController extends Controller
 {
@@ -13,7 +14,13 @@ class AnnouncementController extends Controller
             ->orderByDesc('id')
             ->paginate(10);
 
-        return view('announcements.index', compact('announcements'));
+        $topics = Topic::published()
+            ->orderByDesc('published_at')
+            ->orderByDesc('id')
+            ->limit(5)
+            ->get();
+
+        return view('announcements.index', compact('announcements', 'topics'));
     }
 
     public function show(Announcement $announcement)

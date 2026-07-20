@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Announcement;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
-class AnnouncementController extends Controller
+class TopicController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $announcements = Announcement::orderByDesc('id')->paginate(15);
+        $topics = Topic::orderByDesc('id')->paginate(15);
 
-        return view('admin.announcements.index', compact('announcements'));
+        return view('admin.topics.index', compact('topics'));
     }
 
     /**
@@ -24,9 +24,9 @@ class AnnouncementController extends Controller
      */
     public function create()
     {
-        $announcement = new Announcement();
+        $topic = new Topic();
 
-        return view('admin.announcements.create', compact('announcement'));
+        return view('admin.topics.create', compact('topic'));
     }
 
     /**
@@ -44,25 +44,25 @@ class AnnouncementController extends Controller
             $validated['audio'] = $this->encodeAudio($request->file('audio'));
         }
 
-        Announcement::create($validated);
+        Topic::create($validated);
 
         return redirect()
-            ->route('admin.announcements.index')
-            ->with('status', 'お知らせを作成しました。');
+            ->route('admin.topics.index')
+            ->with('status', 'トピックを作成しました。');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Announcement $announcement)
+    public function edit(Topic $topic)
     {
-        return view('admin.announcements.edit', compact('announcement'));
+        return view('admin.topics.edit', compact('topic'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Announcement $announcement)
+    public function update(Request $request, Topic $topic)
     {
         $validated = $this->validateRequest($request);
 
@@ -78,23 +78,23 @@ class AnnouncementController extends Controller
             $validated['audio'] = null;
         }
 
-        $announcement->update($validated);
+        $topic->update($validated);
 
         return redirect()
-            ->route('admin.announcements.index')
-            ->with('status', 'お知らせを更新しました。');
+            ->route('admin.topics.index')
+            ->with('status', 'トピックを更新しました。');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Announcement $announcement)
+    public function destroy(Topic $topic)
     {
-        $announcement->delete();
+        $topic->delete();
 
         return redirect()
-            ->route('admin.announcements.index')
-            ->with('status', 'お知らせを削除しました。');
+            ->route('admin.topics.index')
+            ->with('status', 'トピックを削除しました。');
     }
 
     private function validateRequest(Request $request): array

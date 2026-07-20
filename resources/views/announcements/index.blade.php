@@ -10,6 +10,65 @@
         </p>
     </section>
 
+    {{-- トピック --}}
+    <section class="mb-10">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <span class="inline-block w-1.5 h-6 bg-[#8CC63F] rounded"></span>
+                トピック
+            </h2>
+            <a href="{{ route('topics.index') }}" class="text-sm text-gray-500 hover:text-gray-700">
+                すべて見る &rarr;
+            </a>
+        </div>
+
+        @if ($topics->isEmpty())
+            <p class="text-gray-500 text-sm">現在トピックはありません。</p>
+        @else
+            <div class="space-y-4">
+                @foreach ($topics as $topic)
+                    <a href="{{ route('topics.show', $topic) }}"
+                       class="group flex bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
+                        @if ($topic->image)
+                            <div class="shrink-0 self-center sm:self-stretch w-14 h-14 sm:w-36 sm:h-auto ms-3 my-3 sm:m-0 rounded-full sm:rounded-none overflow-hidden bg-gray-100">
+                                <img src="{{ $topic->image }}" alt="{{ $topic->title }}" loading="lazy"
+                                     class="w-full h-full object-cover">
+                            </div>
+                        @endif
+                        <div class="min-w-0 flex-1 p-4 sm:p-5">
+                            <div class="text-sm text-gray-500 mb-1">
+                                {{ optional($topic->published_at)->format('Y年n月j日') ?? $topic->created_at->format('Y年n月j日') }}
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800">{{ $topic->title }}</h3>
+                            <p class="mt-2 text-gray-600 line-clamp-2">{{ Str::limit(strip_tags($topic->body), 100) }}</p>
+
+                            <div class="mt-3 flex items-center gap-3">
+                                <span class="inline-flex items-center gap-1 text-sm text-gray-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                                    </svg>
+                                    <span class="tabular-nums">{{ $topic->likes_count }}</span>
+                                </span>
+
+                                @if ($topic->audio)
+                                    <button type="button"
+                                        @click.prevent.stop="$store.audioPlayer.show({{ Illuminate\Support\Js::from($topic->audio) }}, {{ Illuminate\Support\Js::from($topic->title) }})"
+                                        aria-label="音声を再生"
+                                        class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#8CC63F] text-white hover:opacity-90 transition">
+                                        <svg class="w-3.5 h-3.5 ms-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+    </section>
+
     <h1 class="text-2xl font-bold text-gray-800 mb-6">お知らせ</h1>
 
     @if ($announcements->isEmpty())
@@ -42,6 +101,17 @@
                                 </svg>
                                 <span class="tabular-nums">{{ $announcement->likes_count }}</span>
                             </span>
+
+                            @if ($announcement->audio)
+                                <button type="button"
+                                    @click.prevent.stop="$store.audioPlayer.show({{ Illuminate\Support\Js::from($announcement->audio) }}, {{ Illuminate\Support\Js::from($announcement->title) }})"
+                                    aria-label="音声を再生"
+                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#8CC63F] text-white hover:opacity-90 transition">
+                                    <svg class="w-3.5 h-3.5 ms-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                            @endif
 
                             <span class="ms-auto flex items-center gap-1.5" aria-hidden="true">
                                 <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-900 text-white">
