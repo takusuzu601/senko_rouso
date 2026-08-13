@@ -16,8 +16,7 @@ class TopicController extends Controller
         $topics = Topic::published()
             ->select(self::LIST_COLUMNS)
             ->selectRaw('audio IS NOT NULL as has_audio')
-            ->orderByDesc('published_at')
-            ->orderByDesc('id')
+            ->latestPublished()
             ->paginate(10);
 
         return view('topics.index', compact('topics'));

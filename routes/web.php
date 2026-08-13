@@ -30,6 +30,9 @@ Route::middleware('auth')->group(function () {
         ->names('admin.announcements')
         ->parameters(['announcements' => 'announcement']);
 
+    Route::patch('admin/topics/{topic}/toggle', [AdminTopicController::class, 'toggle'])
+        ->name('admin.topics.toggle');
+
     Route::resource('admin/topics', AdminTopicController::class)
         ->except(['show'])
         ->names('admin.topics')

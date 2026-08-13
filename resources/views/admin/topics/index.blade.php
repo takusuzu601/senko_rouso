@@ -36,11 +36,24 @@
                             <tr>
                                 <td class="px-6 py-4 text-gray-800">{{ $topic->title }}</td>
                                 <td class="px-6 py-4">
-                                    @if ($topic->is_published)
-                                        <span class="px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700">公開中</span>
-                                    @else
-                                        <span class="px-2 py-0.5 rounded-full text-xs bg-gray-200 text-gray-600">非公開</span>
-                                    @endif
+                                    {{-- トグルを押した時点で公開/非公開を切り替える --}}
+                                    <form method="POST" action="{{ route('admin.topics.toggle', $topic) }}">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" role="switch"
+                                                aria-checked="{{ $topic->is_published ? 'true' : 'false' }}"
+                                                aria-label="{{ $topic->title }} の公開状態を切り替える"
+                                                class="group inline-flex items-center gap-2">
+                                            <span class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition
+                                                         {{ $topic->is_published ? 'bg-[#8CC63F]' : 'bg-gray-300' }}">
+                                                <span class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition
+                                                             {{ $topic->is_published ? 'translate-x-[22px]' : 'translate-x-0.5' }}"></span>
+                                            </span>
+                                            <span class="text-xs {{ $topic->is_published ? 'text-green-700' : 'text-gray-500' }}">
+                                                {{ $topic->is_published ? '公開中' : '非公開' }}
+                                            </span>
+                                        </button>
+                                    </form>
                                 </td>
                                 <td class="px-6 py-4 text-gray-500">
                                     {{ optional($topic->published_at)->format('Y-m-d') ?? '-' }}

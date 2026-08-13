@@ -86,6 +86,19 @@ class TopicController extends Controller
     }
 
     /**
+     * 一覧のトグルから公開/非公開だけを切り替える。
+     */
+    public function toggle(Topic $topic)
+    {
+        $topic->update(['is_published' => ! $topic->is_published]);
+
+        return back()->with(
+            'status',
+            $topic->is_published ? 'トピックを公開しました。' : 'トピックを非公開にしました。'
+        );
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Topic $topic)
