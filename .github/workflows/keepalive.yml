@@ -1,0 +1,36 @@
+name: Keep Supabase awake
+
+# Supabase 無料プランは 7 日間アクセスがないと DB が自動停止し、
+# サイト全体がダウンする。これを防ぐため、/healthz を定期的に叩いて
+# DB への軽いアクセス(select 1)を発生させ続ける。
+
+on:
+  schedule:
+    # 6 時間ごと(UTC)。GitHub の定期実行は遅延・スキップがあり得るため、
+    # 7 日の猶予に対して十分な余裕をもって複数回叩く。
+    - cron: '37 */6 * * *'
+  workflow_dispatch: {}
+
+# 同時実行を 1 本に絞る(重複起動を防ぐ)
+concurrency:
+  group: keepalive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /healthz
+        run: |
+          URL="https://senko-rouso.onrender.com/healthz"
+          echo "Pinging $URL"
+          # Render 無料枠はスリープからの復帰に時間がかかるため長めのタイムアウト+リトライ
+          code=$(curl -sS -o /dev/null -w '%{http_code}' \
+            --max-time 120 --retry 4 --retry-delay 30 --retry-all-errors \
+            "$URL" || echo "000")
+          echo "HTTP status: $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Keep-alive ping failed (HTTP $code)"
+            exit 1
+          fi
+          echo "Keep-alive ping OK"

@@ -15,6 +15,12 @@ class BasicAuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // キープアライブ用のヘルスチェックは Basic 認証を通さない
+        // (外部から認証情報なしで叩けるようにし、DB への定期アクセスを維持する)
+        if ($request->is('healthz')) {
+            return $next($request);
+        }
+
         $user = config('basicauth.user');
         $pass = config('basicauth.pass');
 

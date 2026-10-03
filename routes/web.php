@@ -6,7 +6,21 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TopicController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+
+// キープアライブ用ヘルスチェック。
+// DB(Supabase)へ軽くアクセスすることで、無料プランの自動停止(7日間無アクセスで一時停止)を防ぐ。
+// Basic 認証は BasicAuthMiddleware 側で除外済み。GitHub Actions から定期的に叩く。
+Route::get('/healthz', function () {
+    try {
+        DB::select('select 1');
+
+        return response('ok', 200)->header('Content-Type', 'text/plain');
+    } catch (\Throwable $e) {
+        return response('db-error', 503)->header('Content-Type', 'text/plain');
+    }
+})->name('healthz');
 
 Route::get('/', [AnnouncementController::class, 'index'])->name('announcements.index');
 Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('announcements.show');
